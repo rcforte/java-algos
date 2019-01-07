@@ -15,6 +15,10 @@ public class BST<T extends Comparable<? super T>> {
     return this;
   }
 
+  public boolean isEmpty() {
+    return root == null;
+  }
+
   private Node<T> insert(Node<T> node, T value) {
     if(node == null) {
       node = new Node<>(value);
@@ -192,5 +196,12 @@ public class BST<T extends Comparable<? super T>> {
           nn.resetVisits();
       }
     }
+  }
+
+  public int refcount(T value) {
+    Node<T> n = find(this.root, value);
+    if(n != null)
+      return n.refcount;
+    return -1;
   }
 }

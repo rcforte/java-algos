@@ -4,12 +4,22 @@ import org.junit.Test;
 
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 public class BSTTest {
 
   private final BST<Integer> bst = new BST<>();
+
+  @Test
+  public void isCreatedEmpty() {
+    assertTrue(bst.isEmpty());
+  }
+
+  @Test
+  public void isEmptyReturnsTrueWhenTreePopulated() {
+    bst.insert(4);
+    assertFalse(bst.isEmpty());
+  }
 
   @Test
   public void traversesInorder() {
@@ -92,9 +102,7 @@ public class BSTTest {
     for(int i = 0; i < 5000; i++) {
       int val = r.nextInt();
       bst.insert(val);
-
-      // also enters random number to a list for testing
-      lst.add(val);
+      lst.add(val); // also enters random number to a list for testing
     }
 
     // Removes the root from the list
@@ -106,5 +114,22 @@ public class BSTTest {
 
     lst.sort(Comparator.<Integer>naturalOrder());
     assertEquals(lst, bst.inorder());
+  }
+
+  @Test
+  public void refcountKeepsTrackOfNumberOfTimesElementInserted() {
+    bst.insert(4,4);
+    assertEquals(2, bst.refcount(4));
+  }
+
+  @Test
+  public void refcountIsMinusOneIfElementNotPresent() {
+    assertEquals(-1, bst.refcount(4));
+  }
+
+  @Test
+  public void refcountIsOneIfElementJustInserted() {
+    bst.insert(4);
+    assertEquals(1, bst.refcount(4));
   }
 }

@@ -9,6 +9,7 @@ public class Node<T> {
 
   public Node(T value) {
     this.value = value;
+    this.refcount = 1;
   }
 
   public void resetVisits() {
