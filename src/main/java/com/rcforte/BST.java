@@ -54,15 +54,21 @@ public class BST<T extends Comparable<? super T>> {
       return find(node.left, value);
   }
 
+  public List<T> preorder() {
+    List<T> ret = new ArrayList<>();
+    preorder(this.root, node -> ret.add(node.value));
+    return ret;
+  }
+
   public List<T> inorder() {
     List<T> ret = new ArrayList<>();
     inorder(this.root, node -> ret.add(node.value));
     return ret;
   }
 
-  public List<T> preorder() {
+  public List<T> postorder() {
     List<T> ret = new ArrayList<>();
-    preorder(this.root, node -> ret.add(node.value));
+    postorder(this.root, node -> ret.add(node.value));
     return ret;
   }
 
@@ -77,6 +83,7 @@ public class BST<T extends Comparable<? super T>> {
     if(node.left == null && node.right == null) {
       if(node.parent.left == node) node.parent.left = null;
       if(node.parent.right == node) node.parent.right = null;
+      node.remove();
     }
 
     // Removes a node with one child
@@ -84,6 +91,7 @@ public class BST<T extends Comparable<? super T>> {
       Node<T> nn = node.left != null ? node.left : node.right;
       if(node.parent.left == node) node.parent.left = nn;
       if(node.parent.right == node) node.parent.right = nn;
+      node.remove();
     }
 
     // Removes a node with two children
@@ -144,6 +152,35 @@ public class BST<T extends Comparable<? super T>> {
         } else if(!n.visitedRight) {
           n.visitedRight = true;
           stack.push(n.right);
+        } else {
+          Node<T> nn = stack.pop();
+          if(nn != null)
+            nn.resetVisits();
+        }
+      } else {
+        Node<T> nn = stack.pop();
+        if(nn != null)
+          nn.resetVisits();
+      }
+    }
+  }
+
+  public void postorder(Node<T> node, Visitor<T> visitor) {
+    Stack<Node<T>> stack = new Stack<>();
+    stack.push(node);
+
+    while(!stack.isEmpty()) {
+      Node<T> n = stack.peek();
+      if(n != null) {
+        if(!n.visitedLeft) {
+          n.visitedLeft = true;
+          stack.push(n.left);
+        } else if(!n.visitedRight) {
+          n.visitedRight = true;
+          stack.push(n.right);
+        } else if(!n.visited) {
+          n.visited = true;
+          visitor.visit(n);
         } else {
           Node<T> nn = stack.pop();
           if(nn != null)

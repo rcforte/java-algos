@@ -5,14 +5,41 @@ import org.junit.Test;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class BSTTest {
 
+  private final BST<Integer> bst = new BST<>();
+
   @Test
-  public void canDoInorderTraversal() {
-    BST<Integer> bst = new BST();
+  public void traversesInorder() {
     bst.insert(4, 2, 1, 3, 6, 5, 7);
     assertEquals(Arrays.asList(1, 2, 3, 4, 5, 6, 7), bst.inorder());
+  }
+
+  @Test
+  public void traversesPreorder() {
+    bst.insert(4, 2, 1, 3, 6, 5, 7);
+    assertEquals(Arrays.asList(4, 2, 1, 3, 6, 5, 7), bst.preorder());
+  }
+
+  @Test
+  public void traversesPostorder() {
+    BST<String> bst = new BST<>();
+    bst.insert("F", "B", "A", "D", "C", "E", "G", "I", "H");
+    assertEquals(Arrays.asList("A", "C", "E", "D", "B", "H", "I", "G", "F"), bst.postorder());
+  }
+
+  @Test
+  public void findsExistingElement() {
+    bst.insert(4, 2, 1, 3, 6, 5, 7);
+    assertEquals(new Integer(1), bst.find(1));
+  }
+
+  @Test
+  public void findReturnsNullForUnexistingElement() {
+    bst.insert(4, 2, 1, 3, 6, 5, 7);
+    assertNull(bst.find(8));
   }
 
   @Test
@@ -48,14 +75,16 @@ public class BSTTest {
   @Test
   public void removesNodeWithTwoChildren() {
     BST<Integer> bst;
+
     bst = new BST<>();
     bst.insert(4, 2, 1, 3);
     bst.remove(2);
+
     assertEquals(Arrays.asList(1, 3, 4), bst.inorder());
   }
 
   @Test
-  public void badAssTest() {
+  public void removesRootFromBigTree() {
     // Adds random numbers to the tree
     BST<Integer> bst = new BST<>();
     Random r = new Random();
@@ -64,7 +93,7 @@ public class BSTTest {
       int val = r.nextInt();
       bst.insert(val);
 
-      // also enters random numbers to a helper list
+      // also enters random number to a list for testing
       lst.add(val);
     }
 

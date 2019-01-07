@@ -14,4 +14,10 @@ public class Node<T> {
   public void resetVisits() {
     visited = visitedLeft = visitedRight = false;
   }
+
+  public void remove() {
+    this.value = null;
+    this.parent = this.left = this.right = null;
+    this.refcount = 0;
+  }
 }
